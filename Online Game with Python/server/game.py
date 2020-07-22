@@ -1,12 +1,13 @@
 from .player import Player
 from .board import Board
 from .round import Round
+import random
 
 class Game(object):
   def __init__(self, id, players, thread):
     self.id = id
     self.players = players
-    self.words_used = []
+    self.words_used = set()
     self.round = None
     self.board = Board()
     self.player_draw_ind = 0
@@ -15,7 +16,8 @@ class Game(object):
     self.create_board()
 
   def start_new_round(self):
-    self.round = Round(self.get_word(), self.players[self.player_draw_id], self.players, self)
+    round_word = self.get_word()
+    self.round = Round(round_word, self.players[self.player_draw_id], self.players, self)
     self.player_draw_ind += 1
 
     if self.player_draw_ind >= len(self.player):
@@ -53,4 +55,15 @@ class Game(object):
     pass
 
   def get_word(self):
-    pass
+    with open('words.txt', 'r') as f:
+      words = []
+
+      for line in f:
+        wrd = line.strip()
+        if wrd not in self.words_used:
+          words.append(wrd)
+
+      self.words_used.add(wrd)
+
+      r = random.randint(0, len(words))
+      return words[r].strip()
