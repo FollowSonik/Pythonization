@@ -31,7 +31,18 @@ class Game(object):
     return self.round.guess(player, guess)
 
   def player_disconnected(self, player):
-    pass
+    if player in self.players:
+      player_ind = self.players.index(player)
+      if player_ind >= self.player_draw_ind:
+        self.player_draw_ind -= 1
+      self.players.remove(player)
+      self.round.player_left(player)
+
+    else:
+      raise Exception('Player not in game.')
+
+    if len(self.players) <= 2:
+      self.end_game()
 
   def skip(self):
     if self.round:
@@ -52,7 +63,8 @@ class Game(object):
     self.board.update(x, y, color)
 
   def end_game(self):
-    pass
+    for player in self.players:
+      self.round.player_left(player)
 
   def get_word(self):
     with open('words.txt', 'r') as f:
@@ -65,5 +77,5 @@ class Game(object):
 
       self.words_used.add(wrd)
 
-      r = random.randint(0, len(words))
+      r = random.randint(0, len(words) - 1)
       return words[r].strip()

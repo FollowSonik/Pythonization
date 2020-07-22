@@ -54,4 +54,4 @@ class Round(object):
       self.end_round('Drawing player leaves.')
 
   def end_round(self):
-    pass
+    self.game.round_ended()
