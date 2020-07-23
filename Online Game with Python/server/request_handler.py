@@ -16,7 +16,7 @@ class Server(object):
         data = conn.recv(1024)
         data = json.loads(data.decode())
 
-        keys = [key for key in data.keys()]
+        keys = [int(data[0])]
         send_msg = {key: [] for key in keys}
 
         for key in keys:
@@ -71,10 +71,11 @@ class Server(object):
               raise Exception('Not a valid request.')
               conn.close()
 
-        conn.sendall(json.dumps(send_msg))
+        conn.sendall(json.dumps(send_msg).encode())
+
       except Exception as e:
         print(f'[EXCEPTION {player.get_name()} disconnected:', e)
-        conn.shutdown(socket.SHUT_RDWR)
+        conn.close()
         break
 
   def handle_queue(self, player):
@@ -105,7 +106,6 @@ class Server(object):
 
     except Exception as e:
       print('[EXCEPTION]', e)
-      conn.shutdown(socket.SHUT_RDWR)
       conn.close()
 
   def connection_thread(self):

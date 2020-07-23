@@ -71,7 +71,7 @@ class Game(object):
       self.round.player_left(player)
 
   def get_word(self):
-    with open('words.txt', 'r') as f:
+    with open('./words.txt', 'r') as f:
       words = []
 
       for line in f:
