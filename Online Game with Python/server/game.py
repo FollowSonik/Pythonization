@@ -1,17 +1,16 @@
-from .player import Player
-from .board import Board
-from .round import Round
+from board import Board
+from Round import Round
 import random
 
 class Game(object):
-  def __init__(self, id, players, thread):
+  def __init__(self, id, players):
     self.id = id
     self.players = players
     self.words_used = set()
     self.round = None
     self.board = Board()
     self.player_draw_ind = 0
-    self.connected_thread = thread
+    self.round_count = 1
     self.start_new_round()
     self.create_board()
 
@@ -19,10 +18,15 @@ class Game(object):
     round_word = self.get_word()
     self.round = Round(round_word, self.players[self.player_draw_id], self.players, self)
     self.player_draw_ind += 1
+    self.round_count += 1
 
     if self.player_draw_ind >= len(self.player):
       self.round_ended()
       self.end_game()
+  
+  def get_player_score(self):
+    scores = {player: player.get_score() for player in self.players}
+    return scores
 
   def create_board(self):
     self.board = Board()

@@ -1,4 +1,4 @@
-from .round import Round
+from Round import Round
 
 class Chat(object):
   def __init__(self, r):
